@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #313131;
+    position:fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+</style>
+</head>
+<body onload="startGame()">
+<button style="position: absolute" onclick="drawFractalPoint()">start</button>
+<script>
+	var A = [window.innerWidth-window.innerWidth/1.1, window.innerHeight/2];
+var B = [window.innerWidth/1.1, window.innerHeight/2];
+var C = [window.innerWidth/2,50];			
+var col = "white";
+var vertexData = [A, B, C];
 
+var myGamePiece;
+var point = [];
+var startX = Math.floor(Math.random()*(240-120)+120);
+
+var startY = Math.floor(Math.random()*(260-170)+170);
+
+function startGame() {
+    myGameArea.start();    
+    drawTriangle();    
+    myGamePiece = new component(startX, startY, col, 1);
+    
+}
+
+function drawFractalPoint() {
+col = "transparent"
+var RV = Math.floor(Math.random() * 3);
+var selectedVertex = vertexData[RV];
+var SVX = selectedVertex[0];
+var SVY = selectedVertex[1];
+var midX = (myGamePiece.x + SVX)/2;
+var midY = (myGamePiece.y + SVY)/2;
+for(var i = 0; i<point.length; i++){
+		myGamePiece.x = point[i].x;
+		myGamePiece.y = point[i].y;
+} 
+
+point.push(new component(midX,midY,"white",1));
+f()
+}
+
+
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    }
+}
+
+function component(x, y, color, r) {    
+    this.x = x;
+    this.y = y;
+    this.r = r;
+    ctx = myGameArea.context;    
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, 2 * Math.PI);
+    ctx.fillStyle = color;    
+    ctx.strokeStyle = color; 
+    ctx.fill();
+    ctx.stroke();
+}
+function drawTriangle() {
+    ctx = myGameArea.context;
+			ctx.beginPath();
+    ctx.moveTo(window.innerWidth-window.innerWidth/1.1, window.innerHeight/2);
+    ctx.lineTo(window.innerWidth/1.1, window.innerHeight/2);
+    ctx.lineTo(window.innerWidth/2,50);
+    ctx.lineTo(window.innerWidth-window.innerWidth/1.1+2, window.innerHeight/2);
+    ctx.lineWidth = 5;   
+    ctx.strokeStyle = "white"; 
+    ctx.stroke();   
+}
+
+function f() {
+	setInterval(function() {
+		drawFractalPoint();			
+	}, 500)				
+}
+			
+</script>
+</body>
+</html>
